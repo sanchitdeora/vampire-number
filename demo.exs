@@ -1,18 +1,19 @@
 defmodule Demo do
-  num = 123050
-  digit_list = Integer.digits(num)
-  len = length(digit_list)
+  num = 1435
+  digits_list = Integer.digits(num)
+  numLength = length(digits_list)
 
-  if(rem(len,2) == 0) do
+  if(rem(numLength,2) == 0) do
+#    root = :math.sqrt(num)
+    factors_list = Vampire.splitFactors(digits_list, div(numLength,2))
+    factors_list = Enum.uniq(factors_list)
+#    Enum.each((factors_list), fn(s) -> IO.puts(s) end)
+    IO.inspect((factors_list))
+    IO.inspect(length(factors_list))
+    fang_list = Vampire.calculateVampire(num, factors_list)
+    Enum.each((fang_list), fn(s) -> IO.puts(s) end)
 
-    #    Enum.each(digit_list, fn(s) -> IO.puts(s) end)
-    fac_list = Vampire.splitFactors(digit_list, len/2)
-#        IO.puts("Im here")
-#        Enum.each(fac_list, fn(s) -> IO.puts(s) end)
-#    Vampire.try()
-    Enum.each((fac_list), fn(s) -> IO.puts(s) end)
-    IO.inspect((fac_list))
-    IO.inspect(length(fac_list))
+
 
 
 
