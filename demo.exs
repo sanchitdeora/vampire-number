@@ -1,34 +1,30 @@
 defmodule Demo do
-  num = 1435
-  digits_list = Integer.digits(num)
-  numLength = length(digits_list)
+  [first, last] = System.argv
+  {first, _} = Integer.parse(first)
+  {last, _} = Integer.parse(last)
+#  :observer.start()
+  IO.puts(first)
+  IO.puts(last)
 
-  if(rem(numLength,2) == 0) do
-#    root = :math.sqrt(num)
-    factors_list = Vampire.splitFactors(digits_list, div(numLength,2))
-    factors_list = Enum.uniq(factors_list)
-#    Enum.each((factors_list), fn(s) -> IO.puts(s) end)
-    IO.inspect((factors_list))
-    IO.inspect(length(factors_list))
-    fang_list = Vampire.calculateVampire(num, factors_list)
-    Enum.each((fang_list), fn(s) -> IO.puts(s) end)
+  :erlang.statistics(:runtime)
+  :erlang.statistics(:wall_clock)
+  {:ok, plistener_pid} = ParentListener.start_link([])
 
+#  {:ok, splitter_pid} = Splitter.start_link([])
+  {:ok, pworkerMain_pid} = ParentWorker.start_link([])
+  IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
+  ParentWorker.splitActors(pworkerMain_pid,[first, last, pworkerMain_pid])
+#  ParentWorker.calculate(pworkerMain_pid,first)
+  {_, t1} = :erlang.statistics(:runtime) # CPU time
+  {_, t2} = :erlang.statistics(:wall_clock) # Real time
+  IO.inspect(pworkerMain_pid, label: "WAITING FOR THIS ")
+#  Process.sleep(5000)
+  state_after_exec = :sys.get_state(pworkerMain_pid, :infinity)
+  IO.inspect(state_after_exec, label: "State After Execution")
+  IO.inspect(pworkerMain_pid, label: "GONNA STOP THIS ")
 
-
-
-
-
-
-
-
-
-
-
-
-  else
-    IO.puts("Not a Vampire Number")
-  end
-
+  IO.puts("CPU time: #{t1} ms Real time: #{t2} ms ")
+#  result = Listener.get(listener)
+#  IO.inspect(result)
+#  IO.puts("Back Here")
 end
-
-
