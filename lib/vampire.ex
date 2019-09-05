@@ -1,5 +1,5 @@
 defmodule Vampire do
-
+#UNUSED FOR NOW
   def splitFactors(digits_list, _len, i, factors_list, _a) when i == length(digits_list) do
     factors_list
   end

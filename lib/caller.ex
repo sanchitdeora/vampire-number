@@ -5,8 +5,6 @@ defmodule Caller do
   end
 
   def splitFactors(digits_list, len, i, factors_list \\ [], elem \\ -1) do
-#    IO.puts("reached splitfactors for i = #{i}")
-#    newTask = Task.async(Vampire, :splitFactors, [digits_list, len, (i + 1), factors_list, elem])
     currElem = Enum.at(digits_list, i)
     updatedDigits_list = List.delete_at(digits_list, i)
 
@@ -19,7 +17,7 @@ defmodule Caller do
           else
             {currElem, updatedDigits_list}
           end
-#        IO.puts("a = #{elem} temp = #{Enum.join(updatedDigits_list,"")}")
+
         factors_list =
           if((((elem |> Integer.digits() |> length()) + 1) == len) && elem != 0) do
 #            IO.puts("before createfactors for i = #{i}")
@@ -28,22 +26,19 @@ defmodule Caller do
           else
             factors_list
           end
-#        IO.inspect(factors_list)
 
         if((((elem |> Integer.digits() |> length()) + 1) < len) && elem != 0) do
           inner_tasks = Enum.map(0..length(updatedDigits_list), fn(i)->
             Task.async(Caller, :splitFactors, [updatedDigits_list, len, i, factors_list, elem])
           end)
           factors_list = Enum.map(inner_tasks, &Task.await(&1, 100000))
-#          splitFactors(updatedDigits_list, len, 0, factors_list ,elem)
         else
-#          IO.inspect(factors_list)
           factors_list
         end
+
       else
         factors_list
       end
-#    IO.puts("ending splitfactors for i = #{i}")
     factors_list = factors_list |> List.flatten()
 
 
@@ -57,54 +52,49 @@ defmodule Caller do
 
     n = (elem * 10) + Enum.at(modDigits_list, i)
     factors_list = factors_list ++ [n]
-#        IO.puts(n)
+#    IO.puts(n)
 #    IO.inspect(factors_list)
     if(i < (length(modDigits_list))) do
       createFactors(elem, modDigits_list, len, factors_list, (i + 1))
     end
   end
 
-  def calculateVampire(num, factors_list, i \\ 0, j \\ 1, fang_list \\ []) do
+  def calculateVampire(num, rem_factorlist, a, i, j, fang_list) when length(rem_factorlist) == 0 do
+    fang_list
+  end
 
-    #    IO.puts("Index i = #{i} || j = #{j}")
-    #    Enum.each(factors_list, fn(x) -> IO.puts(x) end)
-    prev_factor = Enum.at(factors_list, i)
-    next_factor = Enum.at(factors_list, j)
-    #    IO.puts("#{prev_factor} x #{next_factor}")
-    digittemp = Enum.sort(Integer.digits(prev_factor) ++ Integer.digits(next_factor))
-    #    IO.puts("#{prev_factor} x #{next_factor}")
-    #    IO.inspect(digittemp)
-    fang_list =
-      if(digittemp == Enum.sort(Integer.digits(num))) do
+  def calculateVampire(num, rem_factorlist, a, i, j, fang_list \\ []) do
 
-        temp = prev_factor * next_factor
-        #      IO.puts("temp = #{temp} || num = #{num}")
+    fang_list = if(j >= i) do
+    curr_elem = a
+    mid = (i + j) / 2  |> Float.ceil |> :erlang.trunc
+    mid_factor = Enum.at(rem_factorlist,mid)
+#    IO.inspect(mid_factor, label: "mid_factor")
 
-        fang_list =
-          if(temp == num) do
-            fang_list ++ [prev_factor] ++ [next_factor]
-          else
-            fang_list
+
+    fang_list = cond do
+      ((curr_elem * mid_factor) == num) ->
+
+          if((( (curr_elem |> Integer.digits) ++ (mid_factor |> Integer.digits) |> Enum.sort ) == ((num |> Integer.digits) |> Enum.sort))
+          && !((curr_elem |> Integer.digits |> List.last()) == (mid_factor |> Integer.digits |> List.last()) == 0)) do
+
+              fang_list = fang_list ++ [curr_elem] ++ [mid_factor]
+              fang_list
+              else
+              fang_list
           end
-        #        IO.puts(prev_factor)
-        #        IO.inspect(fang_list)
-      else
-        fang_list
-      end
 
-    cond do
-      (j < length(factors_list) - 1) -> calculateVampire(num, factors_list, i, (j + 1), fang_list)
-      (i < length(factors_list) - 2) -> calculateVampire(num, factors_list, i + 1, (i + 2), fang_list)
+      ((curr_elem * mid_factor) < num) -> calculateVampire(num, rem_factorlist, a, (mid + 1), j, fang_list)
+      ((curr_elem * mid_factor) > num) -> calculateVampire(num, rem_factorlist, a, i, (mid - 1), fang_list)
       true -> fang_list
+      end
+      fang_list
+    else
+      fang_list
+
     end
+    fang_list
+
   end
-
-
-  def hello(a) do
-    IO.puts("Hello" <> a)
-    "Hello" <> a
-  end
-
-
 
 end
