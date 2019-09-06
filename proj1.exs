@@ -5,7 +5,7 @@ defmodule Proj1 do
   {last, _} = Integer.parse(last)
   #  :observer.start()
 
-  range = 100
+#  range = 100
 
   first = if(first < 1000 && last >= 1000) do
     1000
@@ -25,7 +25,7 @@ defmodule Proj1 do
     {:ok, pworkerMain_pid} = ParentWorker.start_link()
     #    IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
 
-    ParentWorker.splitActors(pworkerMain_pid,[first, last, range, pworkerMain_pid,plistener_pid])
+    ParentWorker.splitActors(pworkerMain_pid,[first, last, (last - first), pworkerMain_pid,plistener_pid])
     #  ParentWorker.calculate(pworkerMain_pid,first)
 
     #    IO.inspect(pworkerMain_pid, label: "WAITING FOR THIS ")

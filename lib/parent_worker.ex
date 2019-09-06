@@ -19,10 +19,18 @@ defmodule ParentWorker do
   def init(state), do: {:ok, state}
 
   def handle_cast({:splitActors, args}, state) do
-    [first, last, range, pid, listener] = args
+    [first, last, global_range, pid, listener] = args
     first = Caller.scaleUp(first)
     last = Caller.scaleDown(last)
-
+    #    IO.inspect([first | last], label: "FIRST and LAST")
+    local_range = last |> Integer.digits |> length
+    #    IO.inspect(local_range, label: "DIGITS")
+    local_range = :math.pow(10,local_range - 2 ) |> :erlang.trunc
+    #    IO.inspect([local_range | global_range], label: "LOCAL RANGE")
+    range = div(global_range,local_range)
+    #    IO.inspect([[first | last] | range])
+    #    IO.inspect(range, label: "BUCKET")
+    #      range = 1000
     if(last - first <= range) do
       Enum.map(first..last, fn(x) ->
         #       IO.inspect([[[x | pid] | first] | last], label: "SINGLE NUMBER")
@@ -32,10 +40,10 @@ defmodule ParentWorker do
       mid = (last + first)/2 |> Float.ceil |> :erlang.trunc
 
       {:ok, pworker1_pid} = ParentWorker.start_link([])
-      ParentWorker.splitActors(pworker1_pid,[first, mid - 1, range, pworker1_pid, listener])
+      ParentWorker.splitActors(pworker1_pid,[first, mid - 1, global_range, pworker1_pid, listener])
 
       {:ok, pworker2_pid} = ParentWorker.start_link([])
-      ParentWorker.splitActors(pworker2_pid,[mid, last, range, pworker2_pid, listener])
+      ParentWorker.splitActors(pworker2_pid,[mid, last, global_range, pworker2_pid, listener])
 
       state_after_exec = :sys.get_state(pworker1_pid, :infinity)
       state_after_exec = :sys.get_state(pworker2_pid, :infinity)
