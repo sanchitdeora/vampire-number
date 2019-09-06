@@ -4,8 +4,14 @@ defmodule Proj1 do
   {first, _} = Integer.parse(first)
   {last, _} = Integer.parse(last)
 #  :observer.start()
-  IO.puts(first)
-  IO.puts(last)
+
+  first = if(first < 1000 && last >= 1000) do
+      1000
+      else first
+  end
+
+#  IO.puts(first)
+#  IO.puts(last)
 
   :erlang.statistics(:runtime)
   :erlang.statistics(:wall_clock)
@@ -14,16 +20,17 @@ defmodule Proj1 do
     {:ok, plistener_pid} = ParentListener.start_link()
 
     #  {:ok, splitter_pid} = Splitter.start_link([])
-    {:ok, pworkerMain_pid} = ParentWorker.start_link([])
-    IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
+    {:ok, pworkerMain_pid} = ParentWorker.start_link()
+#    IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
+
     ParentWorker.splitActors(pworkerMain_pid,[first, last, pworkerMain_pid,plistener_pid])
-    #  ParentWorker.calculate(pworkerMain_pid,first)
+#  ParentWorker.calculate(pworkerMain_pid,first)
 
 #    IO.inspect(pworkerMain_pid, label: "WAITING FOR THIS ")
-    #  Process.sleep(5000)
-    state_after_exec = :sys.get_state(pworkerMain_pid, :infinity)
-    IO.inspect(state_after_exec, label: "State After Execution")
-    IO.inspect(pworkerMain_pid, label: "GONNA STOP THIS ")
+    Process.sleep(1)
+    _state_after_exec = :sys.get_state(pworkerMain_pid, :infinity)
+#    IO.inspect(state_after_exec, label: "State After Execution")
+#    IO.inspect(pworkerMain_pid, label: "GONNA STOP THIS ")
 
 #    state_after_exec1 = :sys.get_state(plistener_pid, :infinity)
 #    IO.inspect(state_after_exec1, label: "State After Execution Listener")

@@ -3,7 +3,6 @@ defmodule Caller do
   def splitFactors(digits_list, _len, i, factors_list, _a) when i == length(digits_list) do
     factors_list
   end
-
   def splitFactors(digits_list, len, i, factors_list \\ [], elem \\ -1) do
     currElem = Enum.at(digits_list, i)
     updatedDigits_list = List.delete_at(digits_list, i)
@@ -44,7 +43,6 @@ defmodule Caller do
 
   end
 
-
   defp createFactors(_elem, modDigits_list, _len, factors_list, i) when i == (length(modDigits_list) )do
     factors_list
   end
@@ -62,12 +60,11 @@ defmodule Caller do
   def calculateVampire(num, rem_factorlist, a, i, j, fang_list) when length(rem_factorlist) == 0 do
     fang_list
   end
-
   def calculateVampire(num, rem_factorlist, a, i, j, fang_list \\ []) do
 
     fang_list = if(j >= i) do
     curr_elem = a
-    mid = (i + j) / 2  |> Float.ceil |> :erlang.trunc
+    mid = (i + j) / 2 |> Float.ceil |> :erlang.trunc
     mid_factor = Enum.at(rem_factorlist,mid)
 #    IO.inspect(mid_factor, label: "mid_factor")
 
@@ -97,4 +94,21 @@ defmodule Caller do
 
   end
 
+  def scaleUp(num) do
+    num = cond do
+      (rem((num |> Integer.digits |> length),2) == 1 ) -> :math.pow(10, (num |> Integer.digits |> length))
+      true -> num
+    end
+    num = num |> :erlang.trunc
+#    IO.inspect(num,label: "scaleUp")
+  end
+
+  def scaleDown(num) do
+    num = cond do
+      (rem((num |> Integer.digits |> length),2) == 1 ) -> (:math.pow(10, (num |> Integer.digits |> length) - 1) - 1)
+      true -> num
+    end
+    num = num |> :erlang.trunc
+    #    IO.inspect(num,label: "scaleUp")
+  end
 end

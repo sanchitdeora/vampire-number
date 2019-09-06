@@ -21,7 +21,7 @@ defmodule ParentListener do
 
   def handle_call({:update, args}, _from, state) do
     [num, fang_list] = args
-    state = Map.put(state,num, fang_list)
+    state = Map.put(state, num, fang_list)
 #    IO.inspect(state)
     {:reply, state, state}
   end

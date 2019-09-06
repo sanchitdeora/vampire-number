@@ -23,7 +23,6 @@ defmodule Splitter do
       IO.inspect(pworker1_pid, label: "GOING IN")
       ParentWorker.splitActors(pworker1_pid,[first, mid - 1, pworker1_pid])
 
-
       IO.inspect(pid, label: "IN THIS PID :2")
       {:ok, pworker2_pid} = ParentWorker.start_link([])
       IO.inspect(pworker2_pid, label: "GOING IN")

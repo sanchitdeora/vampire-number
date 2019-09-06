@@ -8,7 +8,7 @@
   def init(state), do: {:ok, state}
 
   def calculate(pserver_pid, args) do
-#    IO.inspect(num,label: "VALUE")
+#    IO.inspect(args,label: "VALUE")
     GenServer.cast(pserver_pid, {:calculate, args})
   end
 
@@ -26,8 +26,10 @@
 
   def handle_cast({:splitActors, args}, state) do
     [first, last, pid, listener] = args
+    first = Caller.scaleUp(first)
+    last = Caller.scaleDown(last)
     if(first == last) do
-#      IO.inspect(pid, label: "SINGLE NUMBER")
+#      IO.inspect(first, label: "SINGLE NUMBER")
       ParentWorker.calculate(pid,[first, listener])
     else
       mid = (last + first)/2 |> Float.ceil |> :erlang.trunc
