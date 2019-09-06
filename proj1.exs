@@ -1,17 +1,19 @@
 defmodule Proj1 do
-#STARTING POINT
+  #STARTING POINT
   [first, last] = System.argv
   {first, _} = Integer.parse(first)
   {last, _} = Integer.parse(last)
-#  :observer.start()
+  #  :observer.start()
+
+  range = 100
 
   first = if(first < 1000 && last >= 1000) do
-      1000
-      else first
+    1000
+  else first
   end
 
-#  IO.puts(first)
-#  IO.puts(last)
+  #  IO.puts(first)
+  #  IO.puts(last)
 
   :erlang.statistics(:runtime)
   :erlang.statistics(:wall_clock)
@@ -21,21 +23,21 @@ defmodule Proj1 do
 
     #  {:ok, splitter_pid} = Splitter.start_link([])
     {:ok, pworkerMain_pid} = ParentWorker.start_link()
-#    IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
+    #    IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
 
-    ParentWorker.splitActors(pworkerMain_pid,[first, last, pworkerMain_pid,plistener_pid])
-#  ParentWorker.calculate(pworkerMain_pid,first)
+    ParentWorker.splitActors(pworkerMain_pid,[first, last, range, pworkerMain_pid,plistener_pid])
+    #  ParentWorker.calculate(pworkerMain_pid,first)
 
-#    IO.inspect(pworkerMain_pid, label: "WAITING FOR THIS ")
+    #    IO.inspect(pworkerMain_pid, label: "WAITING FOR THIS ")
     Process.sleep(1)
     _state_after_exec = :sys.get_state(pworkerMain_pid, :infinity)
-#    IO.inspect(state_after_exec, label: "State After Execution")
-#    IO.inspect(pworkerMain_pid, label: "GONNA STOP THIS ")
+    #    IO.inspect(state_after_exec, label: "State After Execution")
+    #    IO.inspect(pworkerMain_pid, label: "GONNA STOP THIS ")
 
-#    state_after_exec1 = :sys.get_state(plistener_pid, :infinity)
-#    IO.inspect(state_after_exec1, label: "State After Execution Listener")
-      result = ParentListener.get(plistener_pid)
-#      IO.inspect(result)
+    #    state_after_exec1 = :sys.get_state(plistener_pid, :infinity)
+    #    IO.inspect(state_after_exec1, label: "State After Execution Listener")
+    result = ParentListener.get(plistener_pid)
+    #      IO.inspect(result)
     Enum.map(Map.keys(result), fn(k) ->
       IO.write("#{k} ")
       Enum.map(Map.get(result,k), fn(v) ->

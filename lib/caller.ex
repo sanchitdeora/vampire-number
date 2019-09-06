@@ -10,27 +10,29 @@ defmodule Caller do
     factors_list =
       if((elem == -1 && currElem != 0) || elem != -1) do
 
-        {elem, updatedDigits_list} =
+        elem =
           if(elem > -1) do
-            { (elem*10 + currElem), updatedDigits_list}
+            elem*10 + currElem
           else
-            {currElem, updatedDigits_list}
+            currElem
           end
 
         factors_list =
-          if((((elem |> Integer.digits() |> length()) + 1) == len) && elem != 0) do
-#            IO.puts("before createfactors for i = #{i}")
+          if((((elem |> Integer.digits() |> length()) + 1) == len)) do
+            #            IO.puts("before createfactors for i = #{i}")
             factors_list ++ createFactors(elem, updatedDigits_list, len)
-
           else
             factors_list
           end
 
-        if((((elem |> Integer.digits() |> length()) + 1) < len) && elem != 0) do
+        if((((elem |> Integer.digits() |> length()) + 1) < len)) do
           inner_tasks = Enum.map(0..length(updatedDigits_list), fn(i)->
-            Task.async(Caller, :splitFactors, [updatedDigits_list, len, i, factors_list, elem])
+            #Task.async(Caller, :splitFactors, [updatedDigits_list, len, i, factors_list, elem])
+            Caller.splitFactors(updatedDigits_list, len, i, factors_list, elem)
           end)
-          factors_list = Enum.map(inner_tasks, &Task.await(&1, 100000))
+
+          factors_list = inner_tasks
+          #          factors_list = Enum.map(inner_tasks, &Task.await(&1, 100000))
         else
           factors_list
         end
@@ -50,8 +52,8 @@ defmodule Caller do
 
     n = (elem * 10) + Enum.at(modDigits_list, i)
     factors_list = factors_list ++ [n]
-#    IO.puts(n)
-#    IO.inspect(factors_list)
+    #    IO.puts(n)
+    #    IO.inspect(factors_list)
     if(i < (length(modDigits_list))) do
       createFactors(elem, modDigits_list, len, factors_list, (i + 1))
     end
@@ -63,27 +65,27 @@ defmodule Caller do
   def calculateVampire(num, rem_factorlist, a, i, j, fang_list \\ []) do
 
     fang_list = if(j >= i) do
-    curr_elem = a
-    mid = (i + j) / 2 |> Float.ceil |> :erlang.trunc
-    mid_factor = Enum.at(rem_factorlist,mid)
-#    IO.inspect(mid_factor, label: "mid_factor")
+      curr_elem = a
+      mid = (i + j) / 2 |> Float.ceil |> :erlang.trunc
+      mid_factor = Enum.at(rem_factorlist,mid)
+      #    IO.inspect(mid_factor, label: "mid_factor")
 
 
-    fang_list = cond do
-      ((curr_elem * mid_factor) == num) ->
+      fang_list = cond do
+        ((curr_elem * mid_factor) == num) ->
 
           if((( (curr_elem |> Integer.digits) ++ (mid_factor |> Integer.digits) |> Enum.sort ) == ((num |> Integer.digits) |> Enum.sort))
           && !((curr_elem |> Integer.digits |> List.last()) == (mid_factor |> Integer.digits |> List.last()) == 0)) do
 
-              fang_list = fang_list ++ [curr_elem] ++ [mid_factor]
-              fang_list
-              else
-              fang_list
+            fang_list = fang_list ++ [curr_elem] ++ [mid_factor]
+            fang_list
+          else
+            fang_list
           end
 
-      ((curr_elem * mid_factor) < num) -> calculateVampire(num, rem_factorlist, a, (mid + 1), j, fang_list)
-      ((curr_elem * mid_factor) > num) -> calculateVampire(num, rem_factorlist, a, i, (mid - 1), fang_list)
-      true -> fang_list
+        ((curr_elem * mid_factor) < num) -> calculateVampire(num, rem_factorlist, a, (mid + 1), j, fang_list)
+        ((curr_elem * mid_factor) > num) -> calculateVampire(num, rem_factorlist, a, i, (mid - 1), fang_list)
+        true -> fang_list
       end
       fang_list
     else
@@ -100,7 +102,7 @@ defmodule Caller do
       true -> num
     end
     num = num |> :erlang.trunc
-#    IO.inspect(num,label: "scaleUp")
+    #    IO.inspect(num,label: "scaleUp")
   end
 
   def scaleDown(num) do
@@ -109,6 +111,5 @@ defmodule Caller do
       true -> num
     end
     num = num |> :erlang.trunc
-    #    IO.inspect(num,label: "scaleUp")
   end
 end
