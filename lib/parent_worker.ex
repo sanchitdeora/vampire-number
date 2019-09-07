@@ -18,8 +18,7 @@ defmodule ParentWorker do
   #  SERVER SIDE
   def init(state), do: {:ok, state}
 
-  def handle_cast({:splitActors, args}, state) do
-    [first, last, global_range, pid, listener] = args
+  def splitActorWork(first, last, global_range, pid, listener) do
     first = Caller.scaleUp(first)
     last = Caller.scaleDown(last)
     #    IO.inspect([first | last], label: "FIRST and LAST")
@@ -29,8 +28,6 @@ defmodule ParentWorker do
     #    IO.inspect([local_range | global_range], label: "LOCAL RANGE")
     range = div(global_range,local_range)
     #    IO.inspect([[first | last] | range])
-    #    IO.inspect(range, label: "BUCKET")
-    #      range = 1000
     if(last - first <= range) do
       Enum.map(first..last, fn(x) ->
         #       IO.inspect([[[x | pid] | first] | last], label: "SINGLE NUMBER")
@@ -42,12 +39,18 @@ defmodule ParentWorker do
       {:ok, pworker1_pid} = ParentWorker.start_link([])
       ParentWorker.splitActors(pworker1_pid,[first, mid - 1, global_range, pworker1_pid, listener])
 
-      {:ok, pworker2_pid} = ParentWorker.start_link([])
-      ParentWorker.splitActors(pworker2_pid,[mid, last, global_range, pworker2_pid, listener])
+      #      {:ok, pworker2_pid} = ParentWorker.start_link([])
+      #      ParentWorker.splitActors(pworker2_pid,[mid, last, global_range, pworker2_pid, listener])
+      splitActorWork(mid, last, global_range, pid, listener)
 
       state_after_exec = :sys.get_state(pworker1_pid, :infinity)
-      state_after_exec = :sys.get_state(pworker2_pid, :infinity)
+      #      state_after_exec = :sys.get_state(pworker2_pid, :infinity)
     end
+  end
+
+  def handle_cast({:splitActors, args}, state) do
+    [first, last, global_range, pid, listener] = args
+    splitActorWork(first, last, global_range, pid, listener)
     {:noreply, state}
   end
 
@@ -80,7 +83,7 @@ defmodule ParentWorker do
       root_digits = root_int |> Integer.digits
       if( (root == root_int) && (Enum.member?(factors_list,root_int)) &&
         ( ((root_digits ++ root_digits) |> Enum.sort) == (digits_list |> Enum.sort)) ) do
-        IO.puts("ROOT EXIST for #{num}")
+        #        IO.puts("ROOT EXIST for #{num}")
         fang_list = fang_list ++ [root] ++ [root]
       end
       if(fang_list != []) do
