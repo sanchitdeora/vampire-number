@@ -87,7 +87,7 @@ defmodule ParentWorker do
         fang_list = fang_list ++ [root] ++ [root]
       end
       if(fang_list != []) do
-        ParentListener.update(listener, [num, fang_list])
+        Listener.update(listener, [num, fang_list])
       end
     end
     {:noreply, state}

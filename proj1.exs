@@ -1,43 +1,44 @@
+#  Starting File
+
 defmodule Proj1 do
-  #STARTING POINT
+
+  # Accepting Command Line Arguments
   [first, last] = System.argv
   {first, _} = Integer.parse(first)
   {last, _} = Integer.parse(last)
-  #  :observer.start()
+#  :observer.start()
 
-#  range = 100
+  # Scales up the first argument if it is less than 1000
+  first =
+    if(first < 1000 && last >= 1000) do
+      1000
+    else
+      first
+    end
 
-  first = if(first < 1000 && last >= 1000) do
-    1000
-  else first
-  end
-
-  #  IO.puts(first)
-  #  IO.puts(last)
-
+  # Initiates computing CPU Time (Runtime) and Real Time (Wall Clock)
   :erlang.statistics(:runtime)
   :erlang.statistics(:wall_clock)
 
   if(last >= first) do
-    {:ok, plistener_pid} = ParentListener.start_link()
 
-    #  {:ok, splitter_pid} = Splitter.start_link([])
-    {:ok, pworkerMain_pid} = ParentWorker.start_link()
-    #    IO.inspect(pworkerMain_pid, label: "MAIN ACTOR")
+    # Start a Listener GenServer
+    {:ok, listener} = Listener.start_link()
 
-    ParentWorker.splitActors(pworkerMain_pid,[first, last, (last - first), pworkerMain_pid,plistener_pid])
-    #  ParentWorker.calculate(pworkerMain_pid,first)
+    # Spawn the Main Worker GenServer
+    {:ok, worker_pid} = Worker.start_link()
 
-    #    IO.inspect(pworkerMain_pid, label: "WAITING FOR THIS ")
+    # Send the Arguments to Split into Further GenServers
+    Worker.splitRange(worker_pid,[first, last, (last - first), worker_pid,listener])
+
+    # Waiting for the Main Worker GenServer to complete the computation
     Process.sleep(1)
-    _state_after_exec = :sys.get_state(pworkerMain_pid, :infinity)
-    #    IO.inspect(state_after_exec, label: "State After Execution")
-    #    IO.inspect(pworkerMain_pid, label: "GONNA STOP THIS ")
+    _state_after_exec = :sys.get_state(worker_pid, :infinity)
 
-    #    state_after_exec1 = :sys.get_state(plistener_pid, :infinity)
-    #    IO.inspect(state_after_exec1, label: "State After Execution Listener")
-    result = ParentListener.get(plistener_pid)
-    #      IO.inspect(result)
+    # Getting the final results from the Listener
+    result = Listener.get(listener)
+
+    # Prints the Output in the required format
     Enum.map(Map.keys(result), fn(k) ->
       IO.write("#{k} ")
       Enum.map(Map.get(result,k), fn(v) ->
@@ -45,9 +46,12 @@ defmodule Proj1 do
       end)
       IO.puts("")
     end)
+
     {_, t1} = :erlang.statistics(:runtime) # CPU time
     {_, t2} = :erlang.statistics(:wall_clock) # Real time
-    t3 = if(t1 == 0 || t2 == 0) do
+
+    # To check if the denominator is 0 or not
+    t3 = if(t2 == 0) do
       0
     else
       t1/t2
@@ -56,5 +60,4 @@ defmodule Proj1 do
   else
     IO.puts("INVALID INPUT. Second Number should be greater than the First Number.")
   end
-
 end
