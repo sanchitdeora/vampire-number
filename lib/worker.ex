@@ -4,8 +4,8 @@ defmodule Worker do
   use GenServer
 
   #  CLIENT SIDE
-  def start_link(state \\ []) do
-    GenServer.start_link(__MODULE__, state)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, :ok, opts)
   end
 
   def calculate(pserver_pid, args) do
@@ -17,7 +17,7 @@ defmodule Worker do
   end
 
   #  SERVER SIDE
-  def init(state), do: {:ok, state}
+  def init(:ok), do: {:ok, %{}}
 
   def handle_cast({:splitRange, args}, state) do
     [first, last, global_range, pid, listener] = args

@@ -23,10 +23,10 @@ defmodule Proj1 do
   if(last >= first) do
 
     # Start a Listener GenServer
-    {:ok, listener} = Listener.start_link()
+    {:ok, listener} = Listener.start_link([])
 
     # Spawn the Main Worker GenServer
-    {:ok, worker_pid} = Worker.start_link()
+    {:ok, worker_pid} = Worker.start_link([])
 
     # Send the Arguments to Split into Further GenServers
     Worker.splitRange(worker_pid,[first, last, (last - first), worker_pid,listener])
@@ -56,6 +56,7 @@ defmodule Proj1 do
     else
       t1/t2
     end
+#    Process.sleep(150000)
     IO.puts("CPU time: #{t1} ms Real time: #{t2} ms Ratio time: #{t3}")
   else
     IO.puts("INVALID INPUT. Second Number should be greater than the First Number.")
