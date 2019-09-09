@@ -24,11 +24,19 @@ Input: The input provided (as command line to your program, e.g. my_app) will be
 
 Output: Print, on independent lines, first the number then its fangs. If there are multiple fangs list all of them next to each other.
 
-### Instructions to run the code
+### Instructions to run the code on Single machine
 
 mix run proj1.exs first last.  
 This command is for Windows OS.  
 The format of output is number followed by it’s fangs displayed on the console. If the result is an empty set, there is no display.
+
+### Instructions to run the code on Multiple remote machines
+
+Ran on three machines, one external, one local node and one supervisor node
+
+1. Launch an Erlang VM on each machine using *iex --name <node_name>@<node_ip_address> --cookie <cookie_name> -S mix*
+2. Update **node_list** in **proj1_remote.exs**
+3. On the supervisor node execute *elixir --name <supervisor_name>@<supervisor_ip_address> --cookie <cookie_name> -S mix run proj1_remote.exs first last *
 
 ### Number of Worker Actors created
 
@@ -114,7 +122,7 @@ CPU time: 173765 ms
 Real time: 23797 ms  
 Ratio time: 7.301970836660083  
 
-### Largest problem that we managed to solve:
+### Largest problem that we managed to solve using a Single machine:
 
 ![Images of Largest Problem (1)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image1.png)
 
