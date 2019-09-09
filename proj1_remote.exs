@@ -8,7 +8,7 @@ defmodule Proj1Remote do
   {last, _} = Integer.parse(last)
   #  :observer.start()
 
-  node_list = [:"m3@127.0.0.1"] # The address of remote nodes
+  node_list = [:"mac1@127.0.0.1", "m2@192.168.0.50"] # The address of remote nodes
   num_nodes = length(node_list) # Number of Nodes
 
   # Generates Node Names
