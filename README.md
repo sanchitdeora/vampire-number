@@ -110,9 +110,9 @@ CPU time: 173765 ms Real time: 23797 ms Ratio time: 7.301970836660083
 
 ### Running Time for the application:
 
-*CPU time: 173765 ms*
-*Real time: 23797 ms*
-*Ratio time: 7.301970836660083*
+**CPU time: 173765 ms**
+**Real time: 23797 ms**
+**Ratio time: 7.301970836660083**
 
 ### Largest problem that we managed to solve:
 
