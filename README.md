@@ -2,16 +2,16 @@
 
 #### Group Members:
 
-Sanchit Deora (8909 - 4939)
+Sanchit Deora (8909 - 4939)  
 Rohit Devulapalli (4787 - 4434)
 
 ## Problem definition
 
 An interesting kind of number in mathematics is vampire number. A vampire number is a composite (Links to an external site.) natural number with an even number of digits, that can be factored into two natural numbers each with half as many digits as the original number and not both with trailing zeroes, where the two factors contain precisely all the digits of the original number, in any order, counting multiplicity.
 A classic example is: 1260 = 21 x 60.
-
+  
 A vampire number can have multiple distinct pairs of fangs. A vampire numbers with 2 pairs of fangs is: 125460 = 204 × 615 = 246 × 510.
-
+  
 The overall goal of this project is to find all Vampire numbers starting at *first* upto *last* using Elixir and the Actor Model to build a good solution to this problem that runs well on multi-core machines.
 
 ### Actor modeling
@@ -26,8 +26,8 @@ Output: Print, on independent lines, first the number then its fangs. If there a
 
 #### Instructions to run the code
 
-mix run proj1.exs first last. 
-This command is for Windows OS. 
+mix run proj1.exs first last.  
+This command is for Windows OS.  
 The format of output is number followed by it’s fangs displayed on the console. If the result is an empty set, there is no display.
 
 #### Number of Worker Actors created
