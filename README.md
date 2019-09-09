@@ -110,10 +110,22 @@ CPU time: 173765 ms Real time: 23797 ms Ratio time: 7.301970836660083
 
 ### Running Time for the application:
 
-**CPU time: 173765 ms**
-**Real time: 23797 ms**
-**Ratio time: 7.301970836660083**
+CPU time: 173765 ms  
+Real time: 23797 ms  
+Ratio time: 7.301970836660083  
 
 ### Largest problem that we managed to solve:
 
-![Images of Largest Problem](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image1.png)
+![Images of Largest Problem (1)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image1.png)
+
+![Images of Largest Problem (2)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image2.png)
+
+![Images of Largest Problem (3)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image3.png)
+
+![Images of Largest Problem (4)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image4.png)
+
+![Images of Largest Problem (5)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image5.png)
+
+![Images of Largest Problem (6)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image6.png)
+
+![Images of Largest Problem (7)](https://github.com/sanchitdeora/vampire-number/blob/master/Images/image7.png)
